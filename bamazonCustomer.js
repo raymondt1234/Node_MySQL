@@ -15,38 +15,53 @@ let connection = mysql.createConnection({
 
 function queryProducts() {
     connection.query("SELECT * FROM products", function (error, response) {
-        
+
         if (error) {
             throw error;
         }
-           
+
         for (let i = 0; i < response.length; i++) {
-            
+
             let product = {
-                ID: response[i].item_id,
-                Product: response[i].product_name,
-                Department: response[i].department_name,
-                Price: response[i].price,
-                In_Stock: response[i].stock_quantity
+                item_id: response[i].item_id,
+                product_name: response[i].product_name,
+                department_name: response[i].department_name,
+                price: response[i].price,
+                stock_quantity: response[i].stock_quantity
             }
 
             products.push(product);
-            
-        }
-        //console.clear();
-        //console.table(products, ['ID', 'Product', 'Department', 'Price', 'In_Stock']);
 
-        console.log('| ID | Product | Department | Price | In Stock |');
-        console.log('------------------------------------------------');
-        
-        for(let i = 0; i < products.length; i++) {
-            console.log(`|${products[i].ID} | ${products[i].Product} | ${products[i].Department} | ${products[i].Price} | ${products[i].In_Stock} |`);
-        }       
-        
-        customerPrompt();
+        }
+        displayTable();
+
     });
 }
+function displayTable() {
+    let displayProducts = [];
 
+    for (let i = 0; i < products.length; i++) {
+        let spacer = '';
+        if (products[i].price < 10) {
+            spacer = '  '
+        } else if (products[i].price < 100) {
+            spacer = ' '
+        }
+        let price = spacer + parseFloat(products[i].price).toFixed(2);
+
+        displayProduct = {
+            ID: products[i].item_id,
+            Product: products[i].product_name,
+            Department: products[i].department_name,
+            Price: price,
+            Stock: products[i].stock_quantity
+        };
+        displayProducts.push(displayProduct);
+    }
+    console.table(displayProducts);
+
+    customerPrompt();
+}
 function customerPrompt() {
     inquirer
         .prompt([
@@ -62,29 +77,32 @@ function customerPrompt() {
         .then(function (answers) {
             let selectedItem = parseInt(answers.item_selected);
             let quantity = parseInt(answers.quantity);
-            let onHand = products[selectedItem-1].In_Stock;
-            console.log(`Want: ${quantity} Have: ${onHand}`);
-            
-            if (quantity <= onHand){
-                let newQuantity = products[selectedItem-1].In_Stock - quantity;
+            let onHand = products[selectedItem - 1].stock_quantity;
+
+            if (quantity <= onHand) {
+                let newQuantity = products[selectedItem - 1].stock_quantity - quantity;
                 updateQuantity(newQuantity, selectedItem);
+
+                let item = products[selectedItem - 1].product_name;
+                let totalPrice = quantity * products[selectedItem - 1].price;
+                console.log(`\n\nQuantity: ${quantity} \nProduct: ${item} \nTotal: $${totalPrice}\n`);
+
             } else {
                 console.log("Insufficient quantity!");
-                customerPrompt();
+                displayTable();
             }
         });
 }
 
 function updateQuantity(quantity, selectedItem) {
-    var sql = `UPDATE products SET stock_quantity = ${quantity} WHERE item_id = ${selectedItem}`;
+    products[selectedItem - 1].stock_quantity = quantity;
+    let sql = `UPDATE products SET stock_quantity = ${quantity} WHERE item_id = ${selectedItem}`;
     connection.query(sql, function (error, result) {
-      if (error) { 
-          throw error;
-      }
-      console.log();
+        if (error) {
+            throw error;
+        }
+        displayTable();
     });
-    queryProducts();
 }
 
 queryProducts();
-
