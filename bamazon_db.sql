@@ -29,6 +29,8 @@ VALUES ("VCR", "Electronics", 75.00, 20);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Video Game", "Electronics", 15.00, 100);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("TV", "Electronics", 1.00, 100);
+VALUES ("PC", "Electronics", 500.00, 10);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Tent", "Outdoors", 250.00, 10);
+
+SELECT * FROM products
