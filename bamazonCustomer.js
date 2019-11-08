@@ -2,16 +2,15 @@ let inquirer = require("inquirer");
 let mysql = require("mysql");
 
 let products = [];
-
-let connection = mysql.createConnection({
-
+const config = {
     host: "localhost",
     port: 3306,
-
     user: "root",
     password: "root",
     database: "bamazon_db"
-});
+}
+
+let connection = mysql.createConnection(config);
 
 function queryProducts() {
     connection.query("SELECT * FROM products", function (error, response) {
@@ -34,7 +33,6 @@ function queryProducts() {
 
         }
         displayTable();
-
     });
 }
 function displayTable() {
@@ -47,6 +45,7 @@ function displayTable() {
         } else if (products[i].price < 100) {
             spacer = ' '
         }
+        
         let price = spacer + parseFloat(products[i].price).toFixed(2);
 
         displayProduct = {
