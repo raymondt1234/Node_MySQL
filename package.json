@@ -1,0 +1,23 @@
+{
+  "name": "node_mysql",
+  "version": "1.0.0",
+  "description": "bamazonCustomer.js provides the user with a table of Products. The user then enters the ID (not the index) of the Product of the item they want to buy. The the user enters the amount of the Product they want. If the user enters an amount that is greater than the Stock on hand, they'll get an error and given the prompt again.\r ![Error](/Select_Product_Error.jpg)",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raymondt1234/Node_MySQL.git"
+  },
+  "author": "Raymond Terry",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/raymondt1234/Node_MySQL/issues"
+  },
+  "homepage": "https://github.com/raymondt1234/Node_MySQL#readme",
+  "dependencies": {
+    "inquirer": "^7.3.2",
+    "mysql": "^2.18.1"
+  }
+}
