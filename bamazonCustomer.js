@@ -45,7 +45,7 @@ function displayTable() {
         } else if (products[i].price < 100) {
             spacer = ' '
         }
-        
+
         let price = spacer + parseFloat(products[i].price).toFixed(2);
 
         displayProduct = {
@@ -76,19 +76,26 @@ function customerPrompt() {
         .then(function (answers) {
             let selectedItem = parseInt(answers.item_selected);
             let quantity = parseInt(answers.quantity);
-            let onHand = products[selectedItem - 1].stock_quantity;
+            
+            
+            if (selectedItem > 0 && selectedItem < products.length + 1) {
+                let onHand = products[selectedItem - 1].stock_quantity;
 
-            if (quantity <= onHand) {
-                let newQuantity = products[selectedItem - 1].stock_quantity - quantity;
-                updateQuantity(newQuantity, selectedItem);
+                if (quantity <= onHand) {
+                    let newQuantity = products[selectedItem - 1].stock_quantity - quantity;
+                    updateQuantity(newQuantity, selectedItem);
 
-                let item = products[selectedItem - 1].product_name;
-                let totalPrice = quantity * products[selectedItem - 1].price;
-                console.log(`\n\nQuantity: ${quantity} \nProduct: ${item} \nTotal: $${totalPrice}\n`);
+                    let item = products[selectedItem - 1].product_name;
+                    let totalPrice = quantity * products[selectedItem - 1].price;
+                    console.log(`\n\nQuantity: ${quantity} \nProduct: ${item} \nTotal: $${totalPrice}\n`);
 
+                } else {
+                    console.log("\nInsufficient quantity!\n");
+                    customerPrompt();
+                }
             } else {
-                console.log("Insufficient quantity!");
-                displayTable();
+                console.log("\nInvalid product ID!\n");
+                customerPrompt();
             }
         });
 }
